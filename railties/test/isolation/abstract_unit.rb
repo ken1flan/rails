@@ -103,9 +103,11 @@ module TestHelpers
   module Generation
     # Build an application by invoking the generator and going through the whole stack.
     def build_app(options = {})
+      puts "######################### #{app_path}"
       @prev_rails_env = ENV["RAILS_ENV"]
       ENV["RAILS_ENV"] = "development"
 
+      puts "######################### #{app_template_path}"
       FileUtils.rm_rf(app_path)
       FileUtils.cp_r(app_template_path, app_path)
 
@@ -153,7 +155,7 @@ module TestHelpers
 
     def teardown_app
       ENV["RAILS_ENV"] = @prev_rails_env if @prev_rails_env
-      FileUtils.rm_rf(tmp_path)
+      # FileUtils.rm_rf(tmp_path)
     end
 
     # Make a very basic app, without creating the whole directory structure.
@@ -401,6 +403,9 @@ Module.new do
 
   `#{Gem.ruby} #{RAILS_FRAMEWORK_ROOT}/railties/exe/rails new #{app_template_path} --skip-gemfile --skip-listen --no-rc`
   File.open("#{app_template_path}/config/boot.rb", "w") do |f|
+    f.puts "puts '----------'"
+    f.puts "puts $LOAD_PATH"
+    f.puts "puts '----------'"
     f.puts "require 'rails/all'"
   end
 
